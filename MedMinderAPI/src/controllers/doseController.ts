@@ -1,5 +1,43 @@
 import express, { Request, Response } from "express";
+import prisma from "../lib/prisma";
 
-const router = express.Router();
+export const getAllDoses = async (req: Request, res: Response) => {
+  const doses = await prisma.dose.findMany();
+  res.json(doses);
+};
 
-router.post("/add", (req: Request, res: Response) => {});
+export const addDose = async (req: Request, res: Response) => {
+  const { time, medicin } = req.body;
+
+  if (!time || !medicin) {
+    res.status(400).json({ message: "Missing time or medicin" });
+  }
+
+  const newDose = await prisma.dose.create({
+    data: {
+      time,
+      medicin,
+      dispensed: false,
+    },
+  });
+
+  res.status(201).json(newDose);
+};
+
+export const deleteDose = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+
+  if (!id) {
+    res.status(400).json({ message: "missing dose id" });
+  }
+  try {
+    const deletedDose = await prisma.dose.delete({
+      where: {
+        id,
+      },
+    });
+    res.status(200).json(deletedDose);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", err });
+  }
+};
