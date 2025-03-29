@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import doseRoutes from "./routes/doseRoutes";
+import "./scheduler/doseCheck";
 
 dotenv.config();
 

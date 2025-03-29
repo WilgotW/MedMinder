@@ -7,16 +7,16 @@ export const getAllDoses = async (req: Request, res: Response) => {
 };
 
 export const addDose = async (req: Request, res: Response) => {
-  const { time, medicin } = req.body;
+  const { time, medicine } = req.body;
 
-  if (!time || !medicin) {
+  if (!time || !medicine) {
     res.status(400).json({ message: "Missing time or medicin" });
   }
 
   const newDose = await prisma.dose.create({
     data: {
       time,
-      medicin,
+      medicine,
       dispensed: false,
     },
   });
