@@ -41,3 +41,18 @@ export const deleteDose = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", err });
   }
 };
+
+export const dispenseDose = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+
+  if (!id) {
+    res.status(400).json({ message: "missing id" });
+  }
+
+  const dispenseDose = await prisma.dose.update({
+    where: { id },
+    data: { dispensed: true },
+  });
+
+  res.status(200).json(dispenseDose);
+};

@@ -1,11 +1,16 @@
 import express from "express";
-import { getAllDoses } from "../controllers/doseController";
+import {
+  addDose,
+  deleteDose,
+  dispenseDose,
+  getAllDoses,
+} from "../controllers/doseController";
 
 const router = express.Router();
 
 router.get("/", getAllDoses);
 router.post("/add", addDose);
 router.delete("/delete/:id", deleteDose);
-router.post("/dispense/:id", despenseDose);
+router.put("/dispense/:id", dispenseDose);
 
 export default router;
