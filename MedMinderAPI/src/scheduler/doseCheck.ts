@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import prisma from "../lib/prisma";
 import { isSameMinute } from "date-fns";
+import { sendPushNotification } from "../utils/sendPushNotifications";
 
 cron.schedule("* * * * *", async () => {
   const now = new Date();
@@ -10,7 +11,7 @@ cron.schedule("* * * * *", async () => {
       dispensed: false,
     },
   });
-  //test
+
   for (const dose of doses) {
     const [hours, minutes] = dose.time.split(":").map(Number);
     const targetTime = new Date(
@@ -29,8 +30,20 @@ cron.schedule("* * * * *", async () => {
         data: { dispensed: true },
       });
 
-      //TODO: SEND TO ESP
-      //TODO: SEND TO APP
+      //send push notification to MedMinder app:
+      //find dose user
+      const user = await prisma.user.findFirst({
+        where: { id: dose.userId },
+      });
+      //send notification
+      if (user?.expoToken) {
+        await sendPushNotification(
+          user.expoToken,
+          `💊 Time to dispense ${dose.medicine} at ${dose.time}`
+        );
+      }
+
+      //TODO: SEND COMMAND TO ESP
     }
   }
 });

@@ -7,7 +7,7 @@ export const getAllDoses = async (req: Request, res: Response) => {
 };
 
 export const addDose = async (req: Request, res: Response) => {
-  const { time, medicine } = req.body;
+  const { time, medicine, userId } = req.body;
 
   if (!time || !medicine) {
     res.status(400).json({ message: "Missing time or medicin" });
@@ -15,6 +15,7 @@ export const addDose = async (req: Request, res: Response) => {
 
   const newDose = await prisma.dose.create({
     data: {
+      userId,
       time,
       medicine,
       dispensed: false,
