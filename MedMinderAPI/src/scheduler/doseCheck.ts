@@ -10,7 +10,7 @@ cron.schedule("* * * * *", async () => {
       dispensed: false,
     },
   });
-
+  //test
   for (const dose of doses) {
     const [hours, minutes] = dose.time.split(":").map(Number);
     const targetTime = new Date(
