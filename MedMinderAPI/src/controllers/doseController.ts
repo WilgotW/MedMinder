@@ -11,6 +11,7 @@ export const addDose = async (req: Request, res: Response) => {
 
   if (!time || !medicine) {
     res.status(400).json({ message: "Missing time or medicin" });
+    return;
   }
 
   const newDose = await prisma.dose.create({
@@ -30,6 +31,7 @@ export const deleteDose = async (req: Request, res: Response) => {
 
   if (!id) {
     res.status(400).json({ message: "missing dose id" });
+    return;
   }
   try {
     const deletedDose = await prisma.dose.delete({
@@ -48,6 +50,7 @@ export const dispenseDose = async (req: Request, res: Response) => {
 
   if (!id) {
     res.status(400).json({ message: "missing id" });
+    return;
   }
 
   const dispenseDose = await prisma.dose.update({
