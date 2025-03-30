@@ -37,7 +37,7 @@ export const newUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const userLogin = async (req: Request, res: Response): Promise<void> => {
   const { name, password } = req.body;
 
   if (!name || !password) {
