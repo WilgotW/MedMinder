@@ -1,24 +1,23 @@
-import { Expo } from "expo-server-sdk";
+import { Notifications } from "expo";
+import { Platform } from "react-native";
+import { useEffect } from "react";
 
-const expo = new Expo();
-
-export async function sendPushNotification(to: string, message: string) {
-  if (!Expo.isExpoPushToken(to)) {
-    console.error("Invalid Expo push token: ", to);
-    return;
+useEffect(() => {
+  let subscription: Notifications.Subscription | undefined;
+  if (Platform.OS !== "web") {
+    subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        if (userId) {
+          fetchDoses();
+        }
+      }
+    );
+  } else {
+    console.log("Push notifications are not supported on web.");
   }
-
-  const notifications = [
-    {
-      to,
-      sound: "default",
-      body: message,
-      data: { withSome: "data" },
-    },
-  ];
-  try {
-    await expo.sendPushNotificationsAsync(notifications);
-  } catch (err) {
-    console.error("Error sending push notification: ", err);
-  }
-}
+  return () => {
+    if (subscription) {
+      subscription.remove();
+    }
+  };
+}, [userId]);
