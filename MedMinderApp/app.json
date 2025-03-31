@@ -3,6 +3,14 @@
     "name": "MedMinderApp",
     "slug": "MedMinderApp",
     "version": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "4327846f-94ae-4114-98f5-5474bff1fbf1"
+      },
+      "router": {
+        "origin": false
+      }
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -16,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.MedMinderApp"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +46,7 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "owner": "wilgotw"
   }
 }

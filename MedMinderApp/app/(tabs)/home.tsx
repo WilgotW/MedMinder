@@ -8,14 +8,16 @@ import {
   Button,
   SafeAreaView,
   StyleSheet,
+  Platform,
 } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import * as Notifications from "expo-notifications";
 
 interface Dose {
   id: number;
@@ -26,27 +28,66 @@ interface Dose {
 }
 
 export default function HomeScreen() {
-  const { userId } = useLocalSearchParams<{ userId: string }>();
+  const [userId, setUserId] = useState<number | null>(null);
   const [medicine, setMedicine] = useState("");
   const [time, setTime] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [doses, setDoses] = useState<Dose[]>([]);
 
+  useEffect(() => {
+    const loadUser = async () => {
+      const stored = await AsyncStorage.getItem("user");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setUserId(parsed.id);
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetchDoses();
+    }
+    let subscription: Notifications.Subscription | undefined;
+    if (Platform.OS !== "web") {
+      subscription = Notifications.addNotificationReceivedListener(
+        (notification) => {
+          if (userId) {
+            fetchDoses();
+          }
+        }
+      );
+    } else {
+      console.log("Push notifications are not supported on web.");
+    }
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, [userId]);
+
   const fetchDoses = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/doses");
+      const res = await fetch(
+        `http://192.168.68.114:4000/api/doses/${userId}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
       if (!res.ok) throw new Error("Failed to fetch doses");
       const data = await res.json();
-      setDoses(data.filter((d: Dose) => d.userId === parseInt(userId || "0")));
+
+      setDoses(data);
     } catch (error) {
       console.error("Error fetching doses:", error);
     }
   };
-
-  useEffect(() => {
-    if (userId) fetchDoses();
-  }, [userId]);
 
   const onTimeChange = (event: DateTimePickerEvent, date?: Date) => {
     if (date) setSelectedDate(date);
@@ -66,10 +107,10 @@ export default function HomeScreen() {
     if (!time || !medicine || !userId) return;
 
     try {
-      const res = await fetch("http://localhost:4000/api/doses/add", {
+      const res = await fetch("http://192.168.68.114:4000/api/doses/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ time, medicine, userId: parseInt(userId) }),
+        body: JSON.stringify({ time, medicine, userId }),
       });
 
       if (!res.ok) throw new Error("Failed to add dose");
@@ -87,7 +128,7 @@ export default function HomeScreen() {
     if (!next) return;
 
     const res = await fetch(
-      `http://localhost:4000/api/doses/dispense/${next.id}`,
+      `http://192.168.68.114:4000/api/doses/dispense/${next.id}`,
       {
         method: "PUT",
       }

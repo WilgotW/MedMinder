@@ -36,10 +36,10 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/users/login", {
+      const res = await fetch("http://192.168.68.114:4000/api/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, password }),
+        body: JSON.stringify({ name: name.trim(), password: password.trim() }),
       });
 
       if (!res.ok) {
@@ -48,30 +48,21 @@ export default function LoginScreen() {
       }
 
       const user = await res.json();
-
-      // Store user in AsyncStorage
       await AsyncStorage.setItem("user", JSON.stringify(user));
 
-      // Get expo push token
       const expoToken = await registerForPushNotificationsAsync();
 
-      // Send expo token to backend
       if (expoToken) {
-        await fetch("http://localhost:4000/api/users/expo-token", {
+        await fetch("http://192.168.68.114:4000/api/user/expo-token", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`, // Adjust if not using JWT
           },
-          body: JSON.stringify({ expoToken }),
+          body: JSON.stringify({ expoToken, userId: user.id }),
         });
       }
 
-      // Navigate to home
-      router.replace({
-        pathname: "/home",
-        params: { userId: user.id.toString() },
-      });
+      router.replace("/home");
     } catch (error) {
       console.error("Login error:", error);
       Alert.alert("Error", "Something went wrong. Please try again.");

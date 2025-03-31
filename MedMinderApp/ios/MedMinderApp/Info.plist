@@ -31,6 +31,12 @@
           <string>com.anonymous.MedMinderApp</string>
         </array>
       </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>exp+medminderapp</string>
+        </array>
+      </dict>
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>
@@ -72,7 +78,7 @@
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
     <key>UIUserInterfaceStyle</key>
-    <string>Automatic</string>
+    <string>Light</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
   </dict>
