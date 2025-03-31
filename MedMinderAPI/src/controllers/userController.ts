@@ -28,11 +28,35 @@ export const newUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     const newUser = await prisma.user.create({
-      data: { name, password },
+      data: { name, password, expoToken: null },
     });
     res.status(201).json(newUser);
   } catch (err) {
     console.error("Error creating user:", err);
+    res.status(500).json({ message: "Server error", error: err });
+  }
+};
+
+export const updateExpoToken = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { expoToken, userId } = req.body;
+
+  if (!expoToken || !userId) {
+    res.status(400).json({ message: "Missing expoToken or userId" });
+    return;
+  }
+
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { expoToken },
+    });
+
+    res.status(200).json({ message: "Expo token updated successfully" });
+  } catch (err) {
+    console.error("Failed to update expoToken:", err);
     res.status(500).json({ message: "Server error", error: err });
   }
 };
