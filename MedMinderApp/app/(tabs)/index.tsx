@@ -1,78 +1,113 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { router } from "expo-router";
+import { View, TextInput, Button, Alert, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const registerForPushNotificationsAsync = async () => {
+    if (Device.isDevice) {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus !== "granted") {
+        console.log("Failed to get push token for push notification!");
+        return null;
+      }
+
+      const tokenData = await Notifications.getExpoPushTokenAsync();
+      return tokenData.data;
+    } else {
+      console.log("Must use physical device for Push Notifications");
+      return null;
+    }
+  };
 
   const handleLogin = async () => {
-    const res = await fetch("http://localhost:4000/api/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, password }),
-    });
+    try {
+      const res = await fetch("http://localhost:4000/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password }),
+      });
 
-    if (res.ok) {
+      if (!res.ok) {
+        Alert.alert("Login failed", "Check your credentials");
+        return;
+      }
+
       const user = await res.json();
+
+      // Store user in AsyncStorage
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+
+      // Get expo push token
+      const expoToken = await registerForPushNotificationsAsync();
+
+      // Send expo token to backend
+      if (expoToken) {
+        await fetch("http://localhost:4000/api/users/expo-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`, // Adjust if not using JWT
+          },
+          body: JSON.stringify({ expoToken }),
+        });
+      }
+
+      // Navigate to home
       router.replace({
         pathname: "/home",
         params: { userId: user.id.toString() },
       });
-    } else {
-      Alert.alert("Login failed", "Check your credentials");
-    }
-  };
-
-  const handleRegister = async () => {
-    const res = await fetch("http://localhost:4000/api/users/new", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, password }),
-    });
-
-    if (res.ok) {
-      Alert.alert("Account created", "You can now log in");
-    } else {
-      Alert.alert("Error", "Username might be taken");
+    } catch (error) {
+      console.error("Login error:", error);
+      Alert.alert("Error", "Something went wrong. Please try again.");
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>MedMinder Login</Text>
       <TextInput
+        style={styles.input}
         placeholder="Username"
         value={name}
         onChangeText={setName}
-        style={styles.input}
       />
       <TextInput
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
         style={styles.input}
+        placeholder="Password"
+        value={password}
+        secureTextEntry
+        onChangeText={setPassword}
       />
-      <Button title="Log in" onPress={handleLogin} />
-      <Button title="Register" onPress={handleRegister} color="gray" />
+      <Button title="Login" onPress={handleLogin} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
+  container: {
+    padding: 16,
+    marginTop: 100,
   },
   input: {
+    height: 40,
+    borderColor: "#ccc",
     borderWidth: 1,
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 6,
-    fontSize: 16,
+    marginBottom: 12,
+    paddingHorizontal: 8,
   },
 });
