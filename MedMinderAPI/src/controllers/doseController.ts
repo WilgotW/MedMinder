@@ -6,6 +6,15 @@ export const getAllDoses = async (req: Request, res: Response) => {
   res.json(doses);
 };
 
+export const getUserDoses = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id);
+
+  const doses = await prisma.dose.findMany({
+    where: { userId },
+  });
+  res.status(201).json(doses);
+};
+
 export const addDose = async (req: Request, res: Response) => {
   const { time, medicine, userId } = req.body;
 
