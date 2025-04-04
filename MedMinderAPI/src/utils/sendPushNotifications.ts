@@ -19,12 +19,11 @@ export async function sendPushNotification(token: string, message: string) {
       to: token,
       sound: "default",
       body: message,
-      data: { customData: "custom data " },
+      data: { customData: "your custom data here" },
     },
   ];
 
   try {
-    // Send the notification asynchronously
     const tickets = await expo.sendPushNotificationsAsync(messages);
     console.log("Push notification tickets:", tickets);
     return tickets;
