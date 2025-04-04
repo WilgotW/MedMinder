@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#define pin1
 
 // put function declarations here:
 int myFunction(int, int);
