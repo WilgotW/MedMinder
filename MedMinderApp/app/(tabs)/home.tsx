@@ -73,7 +73,7 @@ export default function HomeScreen() {
   const fetchDoses = async () => {
     try {
       const res = await fetch(
-        `http://192.168.68.114:4000/api/doses/${userId}`,
+        `https://focused-smile.up.railway.app/api/doses/${userId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -107,11 +107,14 @@ export default function HomeScreen() {
     if (!time || !medicine || !userId) return;
 
     try {
-      const res = await fetch("http://192.168.68.114:4000/api/doses/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ time, medicine, userId }),
-      });
+      const res = await fetch(
+        "https://focused-smile.up.railway.app/api/doses/add",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ time, medicine, userId }),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to add dose");
       const newDose = await res.json();
@@ -128,7 +131,7 @@ export default function HomeScreen() {
     if (!next) return;
 
     const res = await fetch(
-      `http://192.168.68.114:4000/api/doses/dispense/${next.id}`,
+      `https://focused-smile.up.railway.app/api/doses/dispense/${next.id}`,
       {
         method: "PUT",
       }

@@ -36,11 +36,17 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://192.168.68.114:4000/api/user/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), password: password.trim() }),
-      });
+      const res = await fetch(
+        "https://focused-smile.up.railway.app/api/user/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.trim(),
+            password: password.trim(),
+          }),
+        }
+      );
 
       if (!res.ok) {
         Alert.alert("Login failed", "Check your credentials");
@@ -53,13 +59,16 @@ export default function LoginScreen() {
       const expoToken = await registerForPushNotificationsAsync();
 
       if (expoToken) {
-        await fetch("http://192.168.68.114:4000/api/user/expo-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ expoToken, userId: user.id }),
-        });
+        await fetch(
+          "https://focused-smile.up.railway.app/api/user/expo-token",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ expoToken, userId: user.id }),
+          }
+        );
       }
 
       router.replace("/home");
