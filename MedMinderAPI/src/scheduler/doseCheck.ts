@@ -7,9 +7,7 @@ cron.schedule("* * * * *", async () => {
   const now = new Date();
 
   const doses = await prisma.dose.findMany({
-    where: {
-      dispensed: false,
-    },
+    where: { dispensed: false },
   });
 
   for (const dose of doses) {
@@ -23,27 +21,32 @@ cron.schedule("* * * * *", async () => {
     );
 
     if (isSameMinute(now, targetTime)) {
-      console.log(`Time do dispense: ${dose.medicine} at ${dose.time}`);
+      console.log(`Time to dispense: ${dose.medicine} at ${dose.time}`);
 
       await prisma.dose.update({
         where: { id: dose.id },
         data: { dispensed: true },
       });
 
-      //send push notification to MedMinder app:
-      //find dose user
       const user = await prisma.user.findFirst({
         where: { id: dose.userId },
       });
-      //send notification
+
       if (user?.expoToken) {
-        await sendPushNotification(
-          user.expoToken,
-          `💊 Time to dispense ${dose.medicine} at ${dose.time}`
-        );
+        try {
+          await sendPushNotification(
+            user.expoToken,
+            `💊 Time to dispense ${dose.medicine} at ${dose.time}`
+          );
+          console.log(`Push notification sent to user ${dose.userId}`);
+        } catch (error) {
+          console.error("Error sending push notification:", error);
+        }
+      } else {
+        console.warn(`No expo token found for user ${dose.userId}`);
       }
 
-      //TODO: SEND COMMAND TO ESP
+      // TODO: SEND COMMAND TO ESP
     }
   }
 });
