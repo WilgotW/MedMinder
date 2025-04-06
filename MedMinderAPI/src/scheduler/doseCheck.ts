@@ -38,6 +38,8 @@ export async function runDoseCheck() {
         where: { id: dose.userId },
       });
 
+      console.log("Checking dose:", dose);
+
       if (user?.expoToken) {
         try {
           await sendPushNotification(
