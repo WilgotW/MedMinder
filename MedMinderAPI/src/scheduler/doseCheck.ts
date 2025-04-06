@@ -29,7 +29,12 @@ export async function runDoseCheck() {
         data: { dispensed: true },
       });
 
-      const user = await prisma.user.findFirst({
+      if (!dose.userId) {
+        console.warn(`Dose ${dose.id} is missing userId. Skipping.`);
+        continue;
+      }
+
+      const user = await prisma.user.findUnique({
         where: { id: dose.userId },
       });
 
