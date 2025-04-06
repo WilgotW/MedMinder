@@ -1,6 +1,6 @@
 import cron from "node-cron";
 import prisma from "../lib/prisma";
-import { isSameMinute } from "date-fns";
+import { differenceInMinutes } from "date-fns";
 import { sendPushNotification } from "../utils/sendPushNotifications";
 
 export async function runDoseCheck() {
@@ -20,7 +20,8 @@ export async function runDoseCheck() {
       minutes
     );
 
-    if (isSameMinute(now, targetTime)) {
+    const diff = Math.abs(differenceInMinutes(now, targetTime));
+    if (diff <= 2) {
       console.log(`Time to dispense: ${dose.medicine} at ${dose.time}`);
 
       await prisma.dose.update({
@@ -50,5 +51,3 @@ export async function runDoseCheck() {
     }
   }
 }
-
-cron.schedule("* * * * *", runDoseCheck);
