@@ -71,12 +71,12 @@ export const dispenseDose = async (req: Request, res: Response) => {
   res.status(200).json(dispenseDose);
 };
 
-export const triggerDoseCheck = async (req: Request, res: Response) => {
+export async function triggerDoseCheck(req: Request, res: Response) {
   try {
     await runDoseCheck();
-    res.status(200).json({ message: "Dose check executed successfully." });
+    res.status(200).json({ message: "Dose check completed" });
   } catch (error) {
-    console.error("Error in dose check:", error);
-    res.status(500).json({ message: "Error running dose check", error });
+    console.error("Error running dose check:", error);
+    res.status(500).json({ error: "Failed to check doses" });
   }
-};
+}
