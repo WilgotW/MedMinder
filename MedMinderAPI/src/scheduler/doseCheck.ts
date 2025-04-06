@@ -3,7 +3,7 @@ import prisma from "../lib/prisma";
 import { isSameMinute } from "date-fns";
 import { sendPushNotification } from "../utils/sendPushNotifications";
 
-cron.schedule("* * * * *", async () => {
+export async function runDoseCheck() {
   const now = new Date();
 
   const doses = await prisma.dose.findMany({
@@ -49,4 +49,6 @@ cron.schedule("* * * * *", async () => {
       // TODO: SEND COMMAND TO ESP
     }
   }
-});
+}
+
+cron.schedule("* * * * *", runDoseCheck);
