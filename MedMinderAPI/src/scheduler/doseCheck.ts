@@ -7,7 +7,11 @@ export async function runDoseCheck() {
   const now = new Date();
 
   const doses = await prisma.dose.findMany({
-    where: { dispensed: false },
+    where: {
+      dispensed: false,
+      // This condition does not filter anything if userId is always non-null:
+      userId: { not: 0 },
+    },
   });
 
   for (const dose of doses) {
