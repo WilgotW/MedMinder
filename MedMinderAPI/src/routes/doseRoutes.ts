@@ -5,7 +5,6 @@ import {
   dispenseDose,
   getAllDoses,
   getUserDoses,
-  triggerDoseCheck,
 } from "../controllers/doseController";
 
 const router = express.Router();
@@ -15,6 +14,6 @@ router.get("/:id", getUserDoses);
 router.post("/add", addDose);
 router.delete("/delete/:id", deleteDose);
 router.put("/dispense/:id", dispenseDose);
-router.get("/check", triggerDoseCheck);
+// router.get("/check", triggerDoseCheck);
 
 export default router;
