@@ -5,7 +5,35 @@ import { sendPushNotification } from "../utils/sendPushNotifications";
 
 cron.schedule("* * * * *", () => {
   console.log("Running task every minute at", new Date().toLocaleTimeString());
+  doseCheck();
 });
+
+async function doseCheck() {
+  const now = new Date();
+
+  const doses = await prisma.dose.findMany({
+    where: { dispensed: false },
+  });
+
+  for (const dose of doses) {
+    //compare current time with dispense time
+    if (!dose.time || !dose.time.includes(":")) continue;
+
+    const [hours, minutes] = dose.time.split(":");
+    if (
+      now.getHours() >= parseInt(hours) &&
+      now.getMinutes() >= parseInt(minutes)
+    ) {
+      console.log(`Time to dispense: ${dose.medicine}`);
+
+      //update dose dispensed
+      await prisma.dose.update({
+        where: { id: dose.id },
+        data: { dispensed: true },
+      });
+    }
+  }
+}
 
 export async function runDoseCheck() {
   // const now = new Date();
