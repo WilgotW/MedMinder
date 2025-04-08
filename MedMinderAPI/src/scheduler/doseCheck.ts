@@ -7,11 +7,13 @@ cron.schedule("* * * * *", () => {
 });
 
 async function doseCheck() {
-  const now = new Date().toLocaleTimeString("sv-SE", {
+  const now = new Intl.DateTimeFormat("sv-SE", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-  });
+    timeZone: "Europe/Stockholm",
+  }).format(new Date());
+
   console.log("Running task every minute at", now);
 
   const [nowHours, nowMinutes] = now.split(":").map(Number);
