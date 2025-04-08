@@ -1,31 +1,35 @@
 #include <Arduino.h>
-#include <ESP32_Servo.h>  // Kontrollera att detta är rätt headerfil för ditt bibliotek
+#include <ESP32_Servo.h>
 
 Servo myservo;
 
+float rotation = 0.0;
+float stepAmount = 12.27;
+float maxRotation = 270.0;
+
 void setup() {
-  // Anslut servon till GPIO 13 med angivna pulsbreddsgränser (justera vid behov)
   myservo.attach(13, 500, 2500);
-  
-  // Starta på 0° och vänta 3 sekunder
   myservo.write(0);
   delay(3000);
 }
-
+ 
 void loop() {
-  // Svep gradvis från 0° upp till 30°
-  for (int pos = 0; pos <= 250; pos++) {
-    myservo.write(pos);
-    delay(50);   // Justera delay för att anpassa hastigheten
-  }
-  // Pausa 3 sekunder vid 30°
-  delay(3000);
+  step(rotation);
+}
+
+void step(float rotation) {
+  rotation += stepAmount;
   
-  // Svep tillbaka gradvis från 30° till 0°
-  for (int pos = 250; pos >= 0; pos--) {
-    myservo.write(pos);
-    delay(50);
+  if(rotation >= maxRotation){
+    reset(rotation);
+  }else{
+    myservo.write((int)rotation);
+    delay(1000);
   }
-  // Pausa 3 sekunder vid 0°
-  delay(3000);
+}
+
+void reset(float rotation) {
+  rotation = 0;
+  myservo.write(0);
+  delay(1000);
 }
