@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { runDoseCheck } from "../scheduler/doseCheck";
 
 export const getAllDoses = async (req: Request, res: Response) => {
   const doses = await prisma.dose.findMany();
@@ -71,10 +70,10 @@ export const dispenseDose = async (req: Request, res: Response) => {
   res.status(200).json(dispenseDose);
 };
 
-export async function triggerDoseCheck(req: Request, res: Response) {
-  runDoseCheck()
-    .then(() => console.log("Dose check completed"))
-    .catch((error) => console.error("Error running dose check:", error));
+// export async function triggerDoseCheck(req: Request, res: Response) {
+//   runDoseCheck()
+//     .then(() => console.log("Dose check completed"))
+//     .catch((error) => console.error("Error running dose check:", error));
 
-  res.status(200).json({ message: "Dose check triggered" });
-}
+//   res.status(200).json({ message: "Dose check triggered" });
+// }
