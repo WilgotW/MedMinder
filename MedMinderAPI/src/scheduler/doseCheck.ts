@@ -3,7 +3,6 @@ import prisma from "../lib/prisma";
 import { sendPushNotification } from "../utils/sendPushNotifications";
 
 cron.schedule("* * * * *", () => {
-  console.log("Running task every minute at", new Date().toLocaleTimeString());
   doseCheck();
 });
 
@@ -13,6 +12,7 @@ async function doseCheck() {
     minute: "2-digit",
     hour12: false,
   });
+  console.log("Running task every minute at", now);
 
   const [nowHours, nowMinutes] = now.split(":").map(Number);
 
