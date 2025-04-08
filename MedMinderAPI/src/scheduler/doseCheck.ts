@@ -37,8 +37,6 @@ async function doseCheck() {
         where: { id: dose.id },
         data: { dispensed: true },
       });
-
-      // await sendPushNotification(dose.userId, `Time to take ${dose.medicine}!`);
     }
   }
 }
