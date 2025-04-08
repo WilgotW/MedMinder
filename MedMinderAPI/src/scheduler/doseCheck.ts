@@ -2,9 +2,9 @@ import cron from "node-cron";
 import prisma from "../lib/prisma";
 import { sendPushNotification } from "../utils/sendPushNotifications";
 
-cron.schedule("* * * * *", () => {
-  doseCheck();
-});
+// cron.schedule("* * * * *", () => {
+//   doseCheck();
+// });
 
 async function doseCheck() {
   const now = new Intl.DateTimeFormat("sv-SE", {
