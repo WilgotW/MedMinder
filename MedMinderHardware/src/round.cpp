@@ -7,7 +7,7 @@ int roundangle(float angle, float rest) {
 }
 float roundrest(float angle, float rest) {
     float a = angle + rest;
-    int b = a
+    int b = a;
     float c = b;
     float res = c-a;
     return res;

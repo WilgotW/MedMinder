@@ -6,6 +6,7 @@ Servo myservo;
 float rotation = 0.0;
 float stepAmount = 12.27;
 float maxRotation = 270.0;
+float restdeg = 0.0;
 
 void setup() {
   myservo.attach(13, 500, 2500);
@@ -23,7 +24,9 @@ void step(float rotation) {
   if(rotation >= maxRotation){
     reset(rotation);
   }else{
-    myservo.write((int)rotation);
+    int rotint = roundangle(rotation, restdeg);
+    restdeg = roundrest(rotation, restdeg)
+    myservo.write(rotint);
     delay(1000);
   }
 }
