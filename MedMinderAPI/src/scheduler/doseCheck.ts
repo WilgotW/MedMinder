@@ -14,7 +14,7 @@ async function doseCheck() {
     timeZone: "Europe/Stockholm",
   }).format(new Date());
 
-  console.log("Running task every minute at", now);
+  //console.log("Running task every minute at", now);
 
   const [nowHours, nowMinutes] = now.split(":").map(Number);
 
