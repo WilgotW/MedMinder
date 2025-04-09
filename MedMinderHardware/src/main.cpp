@@ -6,7 +6,6 @@ Servo myservo;
 void step();
 void reset();
 
-// 🔧 Anpassningsbara inställningar
 float rotation = 0.0;
 float stepAmount = 12.272727272727;
 float maxRotation = 180.0;   // Ändra detta till 180, 270, 360 osv beroende på vad du vill testa
