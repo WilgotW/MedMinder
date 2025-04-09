@@ -25,6 +25,14 @@ void loop() {
 
 void step() {
   if (rotation >= maxRotation) {
+    // Skriv ut positionen först
+    int pulse = minPulse + (int)((rotation / servoRange) * (maxPulse - minPulse));
+    myservo.writeMicroseconds(pulse);
+    delay(1000);
+    
+    // Öka efter att den gått
+    rotation += stepAmount;
+    
     delay(1000);
     reset();
   } else {
