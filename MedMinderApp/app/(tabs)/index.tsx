@@ -37,7 +37,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       const res = await fetch(
-        "https://focused-smile.up.railway.app/api/user/login",
+        "https://focused-smile-production.up.railway.app/api/user/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -60,7 +60,7 @@ export default function LoginScreen() {
 
       if (expoToken) {
         await fetch(
-          "https://focused-smile.up.railway.app/api/user/expo-token",
+          "https://focused-smile-production.up.railway.app/api/user/expo-token",
           {
             method: "POST",
             headers: {

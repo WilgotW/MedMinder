@@ -73,7 +73,7 @@ export default function HomeScreen() {
   const fetchDoses = async () => {
     try {
       const res = await fetch(
-        `https://focused-smile.up.railway.app/api/doses/${userId}`,
+        `https://focused-smile-production.up.railway.app/api/doses/${userId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -108,7 +108,7 @@ export default function HomeScreen() {
 
     try {
       const res = await fetch(
-        "https://focused-smile.up.railway.app/api/doses/add",
+        "https://focused-smile-production.up.railway.app/api/doses/add",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -131,7 +131,7 @@ export default function HomeScreen() {
     if (!next) return;
 
     const res = await fetch(
-      `https://focused-smile.up.railway.app/api/doses/dispense/${next.id}`,
+      `https://focused-smile-production.up.railway.app/api/doses/dispense/${next.id}`,
       {
         method: "PUT",
       }
