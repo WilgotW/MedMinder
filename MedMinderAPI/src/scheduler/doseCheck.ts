@@ -1,6 +1,6 @@
 import cron from "node-cron";
 import prisma from "../lib/prisma";
-import { sendPushNotification } from "../utils/sendPushNotifications";
+// import { sendPushNotification } from "../utils/sendPushNotifications";
 
 cron.schedule("* * * * *", () => {
   doseCheck();
