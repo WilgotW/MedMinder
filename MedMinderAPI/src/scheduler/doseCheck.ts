@@ -37,6 +37,24 @@ async function doseCheck() {
         where: { id: dose.id },
         data: { dispensed: true },
       });
+
+      // const user = await prisma.user.findUnique({
+      //   where: {
+      //     id: dose.userId,
+      //   },
+      // });
+
+      // if (!user?.expoToken) {
+      //   console.warn("No Expo push token found for user.");
+      //   continue;
+      // }
+
+      // await sendPushNotification({
+      //   to: user.expoToken,
+      //   title: "Time to take your medicine",
+      //   body: `Please take your ${dose.medicine} dose now.`,
+      //   data: { doseId: dose.id },
+      // });
     }
   }
 }
