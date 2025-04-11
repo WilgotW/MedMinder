@@ -2,9 +2,9 @@ import cron from "node-cron";
 import prisma from "../lib/prisma";
 import { sendPushNotification } from "../utils/sendPushNotifications";
 
-// cron.schedule("* * * * *", () => {
-//   doseCheck();
-// });
+cron.schedule("* * * * *", () => {
+  doseCheck();
+});
 
 async function doseCheck() {
   const now = new Intl.DateTimeFormat("sv-SE", {
@@ -14,7 +14,7 @@ async function doseCheck() {
     timeZone: "Europe/Stockholm",
   }).format(new Date());
 
-  //console.log("Running task every minute at", now);
+  console.log("Running task every minute at", now);
 
   const [nowHours, nowMinutes] = now.split(":").map(Number);
 
