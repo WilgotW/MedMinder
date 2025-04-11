@@ -43,9 +43,19 @@ export default function HomeScreen() {
         setUserId(parsed.id);
       }
     };
-
     loadUser();
+
+    //refetch medicine every minute
+    const interval = setInterval(refetchDoses, 2000);
+    return () => clearInterval(interval);
   }, []);
+
+  function refetchDoses() {
+    if (userId) {
+      console.log("trying fetch");
+      fetchDoses();
+    }
+  }
 
   useEffect(() => {
     if (userId) {
