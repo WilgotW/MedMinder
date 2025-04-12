@@ -105,7 +105,7 @@ export const getNextDose = async (req: Request, res: Response) => {
 
       const diff = hourDiff + minuteDiff / 60;
 
-      if (dose.espDispensed == false) {
+      if (dose.espDispensed == false && dose.dispensed == true) {
         return [diff, dose.id];
       }
     })
@@ -114,7 +114,7 @@ export const getNextDose = async (req: Request, res: Response) => {
   doseDiffs.sort((a, b) => a[0] - b[0]);
 
   if (!doseDiffs.length || !doseDiffs[0]) {
-    res.status(500).json({ message: "server error" });
+    res.status(400).json({ message: "no dose to dispense" });
     return;
   }
   const nextDose = userDoses.find((dose) => dose.id == doseDiffs[0][1]);
