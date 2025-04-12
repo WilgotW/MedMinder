@@ -24,6 +24,7 @@ void serverLoop() {
 void getDose(){
     HTTPClient http;
     http.begin(SERVER_URL);
+    
     int httpResponseCode = http.GET();
     if (httpResponseCode > 0) {
         String payload = http.getString();
