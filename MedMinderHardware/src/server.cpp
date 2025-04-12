@@ -1,7 +1,9 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <ArduinoJson.h>
 #include "server.h"
 #include "../secrets.h"
+#include "wheelLogic.h"
 
 void getDose();
 
@@ -21,18 +23,30 @@ void serverLoop() {
   delay(30000);
 }
 
-void getDose(){
-    HTTPClient http;
-    http.begin(SERVER_URL);
-    
-    int httpResponseCode = http.GET();
-    if (httpResponseCode > 0) {
-        String payload = http.getString();
-        Serial.println("Response:");
-        Serial.println(payload);
+void getDose() {
+  HTTPClient http;
+  http.begin(SERVER_URL);
+
+  int httpResponseCode = http.GET();
+  if (httpResponseCode > 0) {
+    String payload = http.getString();
+    Serial.println("Response:");
+    Serial.println(payload);
+
+    StaticJsonDocument<256> doc;  
+    DeserializationError error = deserializeJson(doc, payload);
+    if (error) {
+      Serial.print("deserializeJson() failed: ");
+      Serial.println(error.f_str());
     } else {
-        Serial.print("Error on HTTP request: ");
-        Serial.println(httpResponseCode);
+      bool espDispensed = doc["espDispensed"];
+      if (espDispensed == false) {
+        step();
+      }
     }
-    http.end();
+  } else {
+    Serial.print("Error on HTTP request: ");
+    Serial.println(httpResponseCode);
+  }
+  http.end();
 }
