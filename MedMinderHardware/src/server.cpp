@@ -1,15 +1,12 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include "server.h"
+#include "../secrets.h"
 
 void getDose();
 
-const char* ssid = "Wilgots iPhone";
-const char* password = "Wilgot2005";
-const char* serverURL = "https://focused-smile-production.up.railway.app/api/doses/";
-
 void serverSetup() {
-  WiFi.begin(ssid, password);
+  WiFi.begin(SSID, PASSWORD);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -26,7 +23,7 @@ void serverLoop() {
 
 void getDose(){
     HTTPClient http;
-    http.begin(serverURL);
+    http.begin(SERVER_URL);
     int httpResponseCode = http.GET();
     if (httpResponseCode > 0) {
         String payload = http.getString();
