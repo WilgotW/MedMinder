@@ -29,6 +29,7 @@ export const addDose = async (req: Request, res: Response) => {
       time,
       medicine,
       dispensed: false,
+      espDispensed: false,
     },
   });
 
@@ -95,14 +96,21 @@ export const getNextDose = async (req: Request, res: Response) => {
   });
   const [hours, minutes] = localTime.split(":");
 
-  const doseDiffs = userDoses.map((dose) => {
-    const [doseHours, doseMinutes] = dose.time.split(":");
+  const doseDiffs = userDoses
+    .map((dose) => {
+      const [doseHours, doseMinutes] = dose.time.split(":");
 
-    const hourDiff = parseInt(doseHours) - parseInt(hours);
-    const minuteDiff = parseInt(doseMinutes) - parseInt(minutes);
+      const hourDiff = parseInt(doseHours) - parseInt(hours);
+      const minuteDiff = parseInt(doseMinutes) - parseInt(minutes);
 
-    return [hourDiff + minuteDiff / 60, dose.id];
-  });
+      const diff = hourDiff + minuteDiff / 60;
+
+      if (dose.espDispensed == false) {
+        return [diff, dose.id];
+      }
+    })
+    .filter((d): d is [number, number] => d !== undefined);
+
   doseDiffs.sort((a, b) => a[0] - b[0]);
 
   if (!doseDiffs.length || !doseDiffs[0]) {
@@ -116,5 +124,9 @@ export const getNextDose = async (req: Request, res: Response) => {
     return;
   }
 
+  await prisma.dose.update({
+    where: { id: doseDiffs[0][1] },
+    data: { espDispensed: true },
+  });
   res.status(200).json(nextDose);
 };

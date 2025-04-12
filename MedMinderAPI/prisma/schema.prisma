@@ -26,4 +26,5 @@ model Dose {
   time    String
   medicine   String
   dispensed   Boolean   @default(false)
+  espDispensed Boolean @default(false)
 }
