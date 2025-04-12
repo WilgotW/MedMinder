@@ -3,5 +3,6 @@
 
 void serverSetup();
 void serverLoop();
+void getDose();
 
 #endif

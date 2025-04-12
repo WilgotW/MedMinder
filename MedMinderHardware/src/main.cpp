@@ -14,8 +14,14 @@ void setup() {
   delay(10000);
 }
 
-void loop() {
-  serverLoop(); 
+unsigned long previousMillis = 0;
+const unsigned long interval = 10000; 
 
-  //step();
+void loop() {
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    getDose();  //Call getDose without blocking other tasks
+  }
+
 }

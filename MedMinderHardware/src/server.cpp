@@ -20,7 +20,8 @@ void serverSetup() {
 }
 
 void serverLoop() {
-  delay(30000);
+  delay(3000);
+  
 }
 
 void getDose() {
