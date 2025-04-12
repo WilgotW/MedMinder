@@ -27,6 +27,8 @@ export const newUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    //password is not hashed because only the developers will use this program
+
     const newUser = await prisma.user.create({
       data: { name, password, expoToken: null },
     });

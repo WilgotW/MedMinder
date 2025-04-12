@@ -70,10 +70,41 @@ export const dispenseDose = async (req: Request, res: Response) => {
   res.status(200).json(dispenseDose);
 };
 
-// export async function triggerDoseCheck(req: Request, res: Response) {
-//   runDoseCheck()
-//     .then(() => console.log("Dose check completed"))
-//     .catch((error) => console.error("Error running dose check:", error));
+export const getNextDose = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id);
 
-//   res.status(200).json({ message: "Dose check triggered" });
-// }
+  if (!userId) {
+    res.status(400).json({ message: "missing user id" });
+    return;
+  }
+
+  const userDoses = await prisma.dose.findMany({
+    where: { userId },
+  });
+
+  //find latest dose
+  const localDate = new Date().toLocaleString("sv-SE", {
+    timeZone: "Europe/Stockholm",
+  });
+
+  const [hours, minutes] = localDate.split(":");
+
+  const doseDiffs = userDoses.map((dose) => {
+    const [doseHours, doseMinutes] = dose.time.split(":");
+
+    const hourDiff = parseInt(doseHours) - parseInt(hours);
+    const minuteDiff = parseInt(doseMinutes) - parseInt(minutes);
+
+    return [hourDiff + minuteDiff / 10, dose.id];
+  });
+  doseDiffs.sort((a, b) => a[0] - b[0]);
+
+  const nextDose = userDoses.find((dose) => dose.id == doseDiffs[0][1]);
+
+  if (!nextDose) {
+    res.status(500).json({ message: "server error" });
+    return;
+  }
+
+  res.status(200).json(nextDose);
+};

@@ -4,6 +4,7 @@ import {
   deleteDose,
   dispenseDose,
   getAllDoses,
+  getNextDose,
   getUserDoses,
 } from "../controllers/doseController";
 
@@ -14,6 +15,6 @@ router.get("/:id", getUserDoses);
 router.post("/add", addDose);
 router.delete("/delete/:id", deleteDose);
 router.put("/dispense/:id", dispenseDose);
-// router.get("/check", triggerDoseCheck);
+router.get("/get-next/:id", getNextDose);
 
 export default router;
