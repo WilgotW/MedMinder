@@ -82,12 +82,18 @@ export const getNextDose = async (req: Request, res: Response) => {
     where: { userId },
   });
 
-  //find latest dose
-  const localDate = new Date().toLocaleString("sv-SE", {
-    timeZone: "Europe/Stockholm",
-  });
+  if (!userDoses.length) {
+    res.status(404).json({ message: "No doses found for this user" });
+    return;
+  }
 
-  const [hours, minutes] = localDate.split(":");
+  //find latest dose
+  const localTime = new Date().toLocaleTimeString("sv-SE", {
+    timeZone: "Europe/Stockholm",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const [hours, minutes] = localTime.split(":");
 
   const doseDiffs = userDoses.map((dose) => {
     const [doseHours, doseMinutes] = dose.time.split(":");
@@ -95,10 +101,14 @@ export const getNextDose = async (req: Request, res: Response) => {
     const hourDiff = parseInt(doseHours) - parseInt(hours);
     const minuteDiff = parseInt(doseMinutes) - parseInt(minutes);
 
-    return [hourDiff + minuteDiff / 10, dose.id];
+    return [hourDiff + minuteDiff / 60, dose.id];
   });
   doseDiffs.sort((a, b) => a[0] - b[0]);
 
+  if (!doseDiffs.length || !doseDiffs[0]) {
+    res.status(500).json({ message: "server error" });
+    return;
+  }
   const nextDose = userDoses.find((dose) => dose.id == doseDiffs[0][1]);
 
   if (!nextDose) {
