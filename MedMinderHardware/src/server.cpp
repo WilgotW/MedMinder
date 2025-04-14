@@ -28,6 +28,8 @@ void getDose() {
   HTTPClient http;
   http.begin(SERVER_URL);
 
+  Serial.print("next");
+
   int httpResponseCode = http.GET();
   if (httpResponseCode > 0) {
     String payload = http.getString();
@@ -41,8 +43,11 @@ void getDose() {
       Serial.println(error.f_str());
     } else {
       bool espDispensed = doc["espDispensed"];
-      if (espDispensed == false) {
-        step();
+      bool id = doc["id"];
+      if(id){
+        if (espDispensed == false) {
+          step();
+        }
       }
     }
   } else {

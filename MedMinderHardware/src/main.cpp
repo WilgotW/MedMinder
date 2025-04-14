@@ -21,7 +21,8 @@ void loop() {
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-    getDose();  //Call getDose without blocking other tasks
+    getDose();  
+    
   }
 
 }

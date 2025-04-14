@@ -30,9 +30,9 @@ void step(){
         servo.writeMicroseconds(pulse);
         
         //print rotation
-        Serial.print("Rotation: ");
-        Serial.print(rotationAmount, 6);
-        Serial.println("°");
+        // Serial.print("Rotation: ");
+        // Serial.print(rotationAmount, 6);
+        // Serial.println("°");
         
         delay(20);
       }
