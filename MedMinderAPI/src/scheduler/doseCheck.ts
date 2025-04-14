@@ -2,13 +2,13 @@ import cron from "node-cron";
 import prisma from "../lib/prisma";
 // import { sendPushNotification } from "../utils/sendPushNotifications";
 
-// cron.schedule(
-//   "* * * * *",
-//   () => {
-//     doseCheck();
-//   },
-//   { timezone: "Europe/Stockholm" }
-// );
+cron.schedule(
+  "* * * * *",
+  () => {
+    doseCheck();
+  },
+  { timezone: "Europe/Stockholm" }
+);
 
 async function doseCheck() {
   const now = new Intl.DateTimeFormat("sv-SE", {
