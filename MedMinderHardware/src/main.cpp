@@ -44,10 +44,10 @@ void setup() {
 }
 
 void loop() {
-  // delay(1000);
-  // digitalWrite(audioSource, HIGH);
-  // delay(2000);
-  // digitalWrite(audioSource, LOW);
-  // delay(2000);
+  delay(1000);
+  digitalWrite(audioSource, HIGH);
+  delay(2000);
+  digitalWrite(audioSource, LOW);
+  delay(2000);
 }
 
