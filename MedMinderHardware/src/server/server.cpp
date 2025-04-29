@@ -48,7 +48,7 @@ void getDose() {
       bool id = doc["id"];
       String medicineTitle = doc["medicine"];
 
-      if(id){
+      if(id){        
         if (espDispensed == false) {
           step();
           screenLoop(medicineTitle);
