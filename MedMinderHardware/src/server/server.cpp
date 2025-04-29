@@ -3,7 +3,8 @@
 #include <ArduinoJson.h>
 #include "server.h"
 #include "../secrets.h"
-#include "wheelLogic.h"
+#include "./wheel/wheelLogic.h"
+#include "./screen/screen.h"
 
 void getDose();
 
@@ -44,9 +45,12 @@ void getDose() {
     } else {
       bool espDispensed = doc["espDispensed"];
       bool id = doc["id"];
+      String medicineTitle = doc["medicine"];
+
       if(id){
         if (espDispensed == false) {
           step();
+          screenLoop(medicineTitle);
         }
       }
     }

@@ -29,17 +29,11 @@
 
 
 #include <Arduino.h>
-#include <LiquidCrystal.h>
 
-LiquidCrystal lcd(23, 22, 21, 18, 17, 16);
 int audioSource = 25;
 
-
 void setup() {
-  lcd.setCursor(8, 0);
-  delay(100);
-  lcd.setCursor(0, 0);
-  lcd.print("Ta medicin");
+  
   pinMode(audioSource, OUTPUT);
 }
 

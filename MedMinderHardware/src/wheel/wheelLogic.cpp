@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "globals.h"
+#include "./global/globals.h"
 
 void step();
 void reset();
