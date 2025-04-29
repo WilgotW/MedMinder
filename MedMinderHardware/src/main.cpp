@@ -29,19 +29,13 @@
 
 
 #include <Arduino.h>
-
-int audioSource = 25;
+#include "./global/globals.h"
 
 void setup() {
-  
   pinMode(audioSource, OUTPUT);
 }
 
 void loop() {
-  delay(1000);
-  digitalWrite(audioSource, HIGH);
-  delay(2000);
-  digitalWrite(audioSource, LOW);
-  delay(2000);
+
 }
 

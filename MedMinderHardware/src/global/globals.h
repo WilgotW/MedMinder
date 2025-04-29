@@ -15,4 +15,7 @@ extern float servoRange;
 extern int minPulse;
 extern int maxPulse;
 
+extern int audioSource;
+
+
 #endif

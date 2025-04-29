@@ -5,6 +5,7 @@
 #include "../secrets.h"
 #include "./wheel/wheelLogic.h"
 #include "./screen/screen.h"
+#include "./alarm/alarm.h"
 
 void getDose();
 
@@ -51,6 +52,7 @@ void getDose() {
         if (espDispensed == false) {
           step();
           screenLoop(medicineTitle);
+          soundAlarm();
         }
       }
     }

@@ -1,4 +1,4 @@
-#include "globals.h";
+#include "globals.h"
 
 Servo servo;
 
@@ -10,3 +10,5 @@ float servoRange = 270.0;
 
 int minPulse = 500;
 int maxPulse = 2500;
+
+int audioSource = 25;
