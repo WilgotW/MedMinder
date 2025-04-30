@@ -6,6 +6,7 @@
 #include "./wheel/wheelLogic.h"
 #include "./screen/screen.h"
 #include "./alarm/alarm.h"
+#include "./led/led.h"
 
 void getDose();
 
@@ -53,6 +54,7 @@ void getDose() {
           step();
           screenLoop(medicineTitle);
           soundAlarm();
+          setLED("g");
         }
       }
     }

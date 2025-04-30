@@ -8,7 +8,6 @@ void screenSetup(){
     lcd.setCursor(8, 0);
     delay(100);
     lcd.setCursor(0, 0);
-    
 }
 
 void screenLoop(const String& medicineTitle){

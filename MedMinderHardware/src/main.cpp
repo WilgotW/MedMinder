@@ -31,9 +31,10 @@
 #include <Arduino.h>
 #include "./global/globals.h"
 #include "./led/led.h"
+
+
 void setup() {
-  pinMode(audioSource, OUTPUT);
-  ledSetup();
+
 }
 
 void loop() {

@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-void sreenSetup();
+void screenSetup();
 void screenLoop(const String& medicineTitle);
 
 #endif
