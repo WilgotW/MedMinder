@@ -16,15 +16,16 @@ void serverSetup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    startFading();
   }
   Serial.println("\nConnected to WiFi");
-  
+  stopFading();
+
   getDose();
 }
 
 void serverLoop() {
   delay(3000);
-  
 }
 
 void getDose() {
@@ -54,7 +55,7 @@ void getDose() {
           step();
           screenLoop(medicineTitle);
           soundAlarm();
-          setLED("g");
+          setLED("r");
         }
       }
     }

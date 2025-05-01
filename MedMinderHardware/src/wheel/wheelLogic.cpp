@@ -17,7 +17,7 @@ void reset() {
 }
 
 void wheelSetup() {  
-  servo.attach(13, minPulse, maxPulse); 
+  servo.attach(servoPin, minPulse, maxPulse); 
   servo.writeMicroseconds(minPulse); 
   delay(10000);
 }
