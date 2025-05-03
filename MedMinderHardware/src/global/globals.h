@@ -16,9 +16,9 @@ extern int minPulse;
 extern int maxPulse;
 
 extern int audioSource;
-extern int greenLED;
-extern int redLED;
-extern int whiteLED; 
+extern int ledPin;
 extern int servoPin;
+extern int buttonPin;
+extern bool medicineTaken;
 
 #endif

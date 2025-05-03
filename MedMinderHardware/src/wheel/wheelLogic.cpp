@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include <ESP32Servo.h>
 #include "./global/globals.h"
 #include "./server.h"  
 #include <ArduinoJson.h>
+#include <ESP32_Servo.h>
 
 void reset();
 
@@ -16,11 +16,6 @@ void reset() {
   delay(10000);
 }
 
-void wheelSetup() {  
-  servo.attach(servoPin, minPulse, maxPulse); 
-  servo.writeMicroseconds(minPulse); 
-  delay(10000);
-}
 
 void step() {
   if(rotation >= maxRotation){
@@ -54,3 +49,37 @@ void step() {
   }
 }
 
+void wheelSetup() {
+  Serial.begin(115200);
+  delay(1000); 
+
+  Serial.println("Starting wheelSetup...");
+
+  if (servo.attach(servoPin, minPulse, maxPulse)) {
+    Serial.println("Servo attached successfully.");
+  } else {
+    Serial.println("Failed to attach servo.");
+  }
+
+  // 2) Home the servo
+  rotation = 0;
+  servo.writeMicroseconds(minPulse);
+  Serial.print("Writing min pulse: ");
+  Serial.println(minPulse);
+  delay(2000);
+
+  // 3) Rotate to maxPulse to test movement
+  servo.writeMicroseconds(maxPulse);
+  Serial.print("Writing max pulse: ");
+  Serial.println(maxPulse);
+  delay(2000);
+
+  // 4) Back to middle
+  int middlePulse = (minPulse + maxPulse) / 2;
+  servo.writeMicroseconds(middlePulse);
+  Serial.print("Writing middle pulse: ");
+  Serial.println(middlePulse);
+  delay(2000);
+
+  Serial.println("wheelSetup test completed.");
+}

@@ -5,17 +5,17 @@
 #include "./wheel/wheelLogic.h"
 #include "alarm/alarm.h"
 #include "screen/screen.h"
+#include <LiquidCrystal.h>
+#include "./button/button.h"
 
 void setup() {
-  //Serial.begin(115200);
-  
-  // screenSetup();
-  // alarmSetup();
-  // wheelSetup(); 
+  //screenSetup();
+  //alarmSetup();
   // serverSetup();
+  wheelSetup();
 }
 
 void loop() {
-  // fadeLEDUpDown();
+  //buttonLoop();
 }
 

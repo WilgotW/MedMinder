@@ -1,14 +1,17 @@
 #include "globals.h"
 
 //pins
+bool medicineTaken = true;
+
 int audioSource = 25;
-int greenLED = 35;
-int redLED = 34;
-int whiteLED = 33;
-int servoPin = 13;
+
+int ledPin = 34;
+
+int buttonPin = 10; //byt
 
 Servo servo;
 
+int servoPin = 13;
 float rotation = 0.0;
 float stepAmount = 12.3;
 

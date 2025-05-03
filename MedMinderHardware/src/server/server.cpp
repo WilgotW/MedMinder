@@ -7,6 +7,7 @@
 #include "./screen/screen.h"
 #include "./alarm/alarm.h"
 #include "./led/led.h"
+#include "./global/globals.h"
 
 void getDose();
 
@@ -16,10 +17,8 @@ void serverSetup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
-    startFading();
   }
   Serial.println("\nConnected to WiFi");
-  stopFading();
 
   getDose();
 }
@@ -52,10 +51,11 @@ void getDose() {
 
       if(id){        
         if (espDispensed == false) {
+          medicineTaken = false;
           step();
           screenLoop(medicineTitle);
           soundAlarm();
-          setLED("r");
+          
         }
       }
     }

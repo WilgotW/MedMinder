@@ -6,9 +6,7 @@
 LiquidCrystal lcd(23, 22, 21, 18, 17, 16);
 
 void screenSetup(){
-    lcd.setCursor(8, 0);
-    delay(100);
-    lcd.setCursor(0, 0);
+    lcd.begin(16, 2);
     screenLoop("Alvedon");
 }
 
@@ -17,8 +15,10 @@ void screenLoop(const String& medicineTitle){
         for(int i = 0; i < 5; i++){
             lcd.print("Ta medicin");
             delay(2000);
+            lcd.clear();
             lcd.print(medicineTitle);
             delay(2000);
+            lcd.clear();
         }
         lcd.print("Ta medicin");
     }
