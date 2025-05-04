@@ -14,12 +14,9 @@ void alarmSetup(){
         digitalWrite(audioSource, LOW);
         delay(50);
     }
-
-    soundAlarm();
 }
-void soundAlarm(){
-    
 
+void soundAlarm(){
     while (medicineTaken == false){
         for(int i = 0; i < 5; i++){
             digitalWrite(audioSource, HIGH);
@@ -28,5 +25,7 @@ void soundAlarm(){
             delay(200);
         }
         delay(10000);
+        medicineTaken = true; //remove later
+
     }
 }

@@ -1,21 +1,30 @@
 #include <Arduino.h>
 #include "./global/globals.h"
-#include "./led/led.h"
-#include "./server/server.h"
 #include "./wheel/wheelLogic.h"
-#include "alarm/alarm.h"
-#include "screen/screen.h"
-#include <LiquidCrystal.h>
-#include "./button/button.h"
-
+#include "server.h"
+#include "./alarm/alarm.h"
 void setup() {
-  //screenSetup();
-  //alarmSetup();
-  // serverSetup();
-  wheelSetup();
+  Serial.begin(115200);
+  // Serial.println("Hello!");
+
+  //serverSetup(); 
+
+  servo.attach(servoPin, minPulse, maxPulse);
+  servo.writeMicroseconds(minPulse);
+  delay(2000);
+  // alarmSetup();
+  // delay(1000);
+  reset();
 }
+
+unsigned long previousMillis = 0;
+const unsigned long interval = 2000; 
 
 void loop() {
-  //buttonLoop();
-}
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    step();    
+  }
 
+}

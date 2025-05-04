@@ -3,6 +3,6 @@
 
 void step();
 void reset();
-void wheelSetup();
+// void wheelSetup();
 
 #endif

@@ -52,7 +52,7 @@ void getDose() {
       if(id){        
         if (espDispensed == false) {
           medicineTaken = false;
-          step();
+          //step();
           screenLoop(medicineTitle);
           soundAlarm();
           

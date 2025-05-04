@@ -7,11 +7,12 @@ int audioSource = 25;
 
 int ledPin = 34;
 
-int buttonPin = 10; //byt
+// int buttonPin = 10; //byt
 
 Servo servo;
 
-int servoPin = 13;
+// int servoPin = 13;
+int servoPin = 32;
 float rotation = 0.0;
 float stepAmount = 12.3;
 
