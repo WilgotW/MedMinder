@@ -11,8 +11,8 @@ int ledPin = 34;
 
 Servo servo;
 
-// int servoPin = 13;
-int servoPin = 32;
+int servoPin = 13;
+// int servoPin = 32;
 float rotation = 0.0;
 float stepAmount = 12.3;
 
