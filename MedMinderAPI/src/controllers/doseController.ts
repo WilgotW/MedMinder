@@ -70,7 +70,6 @@ export const dispenseDose = async (req: Request, res: Response) => {
 
   res.status(200).json(dispenseDose);
 };
-
 export const getNextDose = async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id);
 
@@ -88,7 +87,7 @@ export const getNextDose = async (req: Request, res: Response) => {
     return;
   }
 
-  //find latest dose
+  // find latest dose
   const localTime = new Date().toLocaleTimeString("sv-SE", {
     timeZone: "Europe/Stockholm",
     hour: "2-digit",
@@ -103,7 +102,10 @@ export const getNextDose = async (req: Request, res: Response) => {
       const hourDiff = parseInt(doseHours) - parseInt(hours);
       const minuteDiff = parseInt(doseMinutes) - parseInt(minutes);
 
-      const diff = hourDiff + minuteDiff / 60;
+      let diff = hourDiff + minuteDiff / 60;
+
+      // ✅ Fix: wrap around midnight if dose is earlier than current time
+      if (diff < 0) diff += 24;
 
       if (dose.espDispensed == false && dose.dispensed == true) {
         return [diff, dose.id];
@@ -117,6 +119,7 @@ export const getNextDose = async (req: Request, res: Response) => {
     res.status(400).json({ message: "no dose to dispense" });
     return;
   }
+
   const nextDose = userDoses.find((dose) => dose.id == doseDiffs[0][1]);
 
   if (!nextDose) {
@@ -128,5 +131,6 @@ export const getNextDose = async (req: Request, res: Response) => {
     where: { id: doseDiffs[0][1] },
     data: { espDispensed: true },
   });
+
   res.status(200).json(nextDose);
 };
