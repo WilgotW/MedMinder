@@ -5,5 +5,6 @@
 
 void screenSetup();
 void screenLoop(const String& medicineTitle);
+void updateScreen();
 
 #endif

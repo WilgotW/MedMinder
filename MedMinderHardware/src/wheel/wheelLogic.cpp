@@ -1,47 +1,47 @@
+// wheelLogic.cpp
+
 #include <Arduino.h>
+#include <Servo.h>
 #include "./global/globals.h"
 #include "./alarm/alarm.h"
 
-void step();
-void reset();
-#include <Arduino.h>
-#include "./global/globals.h"
-#include "./alarm/alarm.h"
+extern Servo servo;
 
-void step();
 void reset();
+void step();
+
+void reset() {
+  rotation = maxRotation;
+  servo.writeMicroseconds(maxPulse);
+  medicineTaken = false;
+}
 
 void step() {
-    // If we’ve reached 0°, pause and reset back up
-    if (rotation <= 0) {
-      delay(1000);
-      medicineTaken = false;
-      reset();
-    } else {
-      // Compute next target by subtracting stepAmount
-      float startRotation = rotation;
-      float targetRotation = rotation - stepAmount;
-      if (targetRotation <= 0) targetRotation = 0;
-  
-      // Smoothly interpolate in substeps
-      int subSteps = 10;
-      float subStepAmount = (startRotation - targetRotation) / subSteps;
-      for (int i = 0; i < subSteps; i++) {
-        float rotationAmount = startRotation - (i + 1) * subStepAmount;
-        int pulse = minPulse + (int)((rotationAmount / maxRotation) * (maxPulse - minPulse));
-        servo.writeMicroseconds(pulse);
-        delay(20);
-      }
-  
-      rotation = targetRotation;
-      delay(2000);
+  if (rotation <= 0) {
+    // reached bottom: pause, reset
+    unsigned long start = millis();
+    while (millis() - start < 1000) {
+      // non-blocking wait if you need other loops
     }
+    medicineTaken = false;
+    reset();
+    return;
   }
-  
-  void reset() {
-    // Jump back to the top (270°)
-    soundAlarm();
-    rotation = maxRotation;
-    servo.writeMicroseconds(maxPulse);
-    medicineTaken = false;  // optional flag
+
+  float startRot = rotation;
+  float targetRot = max(0.0f, rotation - stepAmount);
+
+  // break into substeps
+  const int subSteps = 10;
+  float delta = (startRot - targetRot) / subSteps;
+  for (int i = 1; i <= subSteps; ++i) {
+    float r = startRot - i * delta;
+    int pulse = minPulse + int((r / maxRotation) * (maxPulse - minPulse));
+    servo.writeMicroseconds(pulse);
+    delay(20);
   }
+
+  rotation = targetRot;
+  delay(2000);
+}
+

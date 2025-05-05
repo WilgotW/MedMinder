@@ -1,17 +1,20 @@
-#include <WiFi.h>
-#include <HTTPClient.h>
-#include <ArduinoJson.h>
 #include "server.h"
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <ArduinoJson.h>
 #include "../secrets.h"
-#include "./wheel/wheelLogic.h"
-#include "./screen/screen.h"
-#include "./alarm/alarm.h"
-#include "./led/led.h"
-#include "./global/globals.h"
+#include "../global/globals.h"
+#include "../wheel/wheelLogic.h"
+#include "../screen/screen.h"
+#include "../alarm/alarm.h"
+#include "../led/led.h"
 
-void getDose();
+// how often to poll (ms)
+static unsigned long previousDoseMillis = 0;
+static const unsigned long doseInterval = 5000;
 
 void serverSetup() {
+  Serial.begin(115200);
   WiFi.begin(SSID, PASSWORD);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
@@ -24,44 +27,37 @@ void serverSetup() {
 }
 
 void serverLoop() {
-  delay(3000);
+  unsigned long now = millis();
+  if (now - previousDoseMillis >= doseInterval) {
+    previousDoseMillis = now;
+    getDose();
+  }
 }
 
 void getDose() {
   HTTPClient http;
-  http.begin(SERVER_URL);
+  WiFiClient  client;
 
-  Serial.print("next");
+  http.begin(client, SERVER_URL);
+  int code = http.GET();
 
-  int httpResponseCode = http.GET();
-  if (httpResponseCode > 0) {
+  if (code > 0) {
     String payload = http.getString();
-    Serial.println("Response:");
-    Serial.println(payload);
-
-    StaticJsonDocument<256> doc;  
-    DeserializationError error = deserializeJson(doc, payload);
-    if (error) {
-      Serial.print("deserializeJson() failed: ");
-      Serial.println(error.f_str());
-    } else {
-      bool espDispensed = doc["espDispensed"];
-      bool id = doc["id"];
+    StaticJsonDocument<256> doc;
+    if (deserializeJson(doc, payload) == DeserializationError::Ok) {
+      bool espDispensed   = doc["espDispensed"];
+      bool id             = doc["id"];
       String medicineTitle = doc["medicine"];
 
-      if(id){        
-        if (espDispensed == false) {
-          medicineTaken = false;
-          //step();
-          screenLoop(medicineTitle);
-          soundAlarm();
-          
-        }
+      if (id && !espDispensed) {
+        medicineTaken = false;
+        step();
+        screenLoop(medicineTitle);
       }
     }
   } else {
-    Serial.print("Error on HTTP request: ");
-    Serial.println(httpResponseCode);
+    Serial.printf("HTTP error: %d\n", code);
   }
+
   http.end();
 }

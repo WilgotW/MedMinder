@@ -3,29 +3,42 @@
 #include "alarm.h"
 
 
+unsigned long lastAlarmTime = 0;
+int alarmStage = 0;
+bool alarmActive = false;
 
-void alarmSetup(){
-    pinMode(audioSource, OUTPUT);
+void alarmSetup() {
+  pinMode(D6, OUTPUT);
+  delay(1000);
+
+  for (int i = 0; i < 2; i++) {
+    digitalWrite(D6, HIGH);
     delay(100);
+    digitalWrite(D6, LOW);
+    delay(100);
+  }
 
-    for(int i = 0; i < 2; i++){
-        digitalWrite(audioSource, HIGH);
-        delay(50);
-        digitalWrite(audioSource, LOW);
-        delay(50);
-    }
+  alarmActive = true;
 }
 
-void soundAlarm(){
-    while (medicineTaken == false){
-        for(int i = 0; i < 5; i++){
-            digitalWrite(audioSource, HIGH);
-            delay(200);
-            digitalWrite(audioSource, LOW);
-            delay(200);
-        }
-        delay(10000);
-        medicineTaken = true; //remove later
+void soundAlarmLoop() {
+  if (!alarmActive || medicineTaken) {
+    digitalWrite(D6, LOW); 
+    return;
+  }
 
+  unsigned long now = millis();
+
+  if (alarmStage < 3) { 
+    if (now - lastAlarmTime >= 200) {
+      digitalWrite(D6, alarmStage % 2 == 0 ? HIGH : LOW);
+      alarmStage++;
+      lastAlarmTime = now;
     }
+  } else {
+    if (now - lastAlarmTime >= 1000) {
+      alarmStage = 0;
+      lastAlarmTime = now;
+    }
+  }
 }

@@ -2,7 +2,6 @@
 #define ALARM_H
 
 void alarmSetup();
-void soundAlarm();
-
+void soundAlarmLoop();
 
 #endif

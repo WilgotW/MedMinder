@@ -1,8 +1,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <ESP32_Servo.h>
-
+#include <Servo.h>
 // wheel variables
 extern Servo servo;
 
