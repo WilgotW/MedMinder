@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include <Servo.h>
+#include "./button/button.h"
 #include "./global/globals.h"
 #include "./alarm/alarm.h"
 #include "./screen/screen.h"
@@ -13,13 +14,17 @@ void setup() {
   servo.attach(D8, minPulse, maxPulse);
   servo.writeMicroseconds(minPulse);
 
-  serverSetup();
-  alarmSetup();
   screenSetup();
+  reset();
+  serverSetup();
+  buttonSetup();
+  alarmSetup();
 }
 
 void loop() {
+  buttonLoop();
   updateScreen(); 
+  //updateWheel();
   soundAlarmLoop();
   serverLoop();
 }

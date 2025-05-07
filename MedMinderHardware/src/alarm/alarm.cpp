@@ -2,15 +2,25 @@
 #include "./global/globals.h"
 #include "alarm.h"
 
+// Timing constants
+static const unsigned long TOGGLE_INTERVAL = 250;   // Toggle every 0.5s
+static const unsigned long PAUSE_DURATION  = 10000; // 10s pause after 5 beeps
+static const int MAX_BEEPS = 5;
 
-unsigned long lastAlarmTime = 0;
-int alarmStage = 0;
-bool alarmActive = false;
+// State variables
+static bool alarmActive = false;
+static bool isBeeping   = false;
+int  beepCount   = 0;
+
+static unsigned long lastToggleTime = 0;
+static unsigned long pauseStartTime = 0;
+static bool outputState = false;
 
 void alarmSetup() {
   pinMode(D6, OUTPUT);
-  delay(1000);
+  digitalWrite(D6, LOW);
 
+  // Startup flash
   for (int i = 0; i < 2; i++) {
     digitalWrite(D6, HIGH);
     delay(100);
@@ -19,26 +29,30 @@ void alarmSetup() {
   }
 
   alarmActive = true;
+  isBeeping = true;
+  beepCount = 0;
+  lastToggleTime = millis();
 }
 
 void soundAlarmLoop() {
   if (!alarmActive || medicineTaken) {
-    digitalWrite(D6, LOW); 
+    digitalWrite(D6, LOW);
     return;
   }
 
+
   unsigned long now = millis();
 
-  if (alarmStage < 3) { 
-    if (now - lastAlarmTime >= 200) {
-      digitalWrite(D6, alarmStage % 2 == 0 ? HIGH : LOW);
-      alarmStage++;
-      lastAlarmTime = now;
-    }
-  } else {
-    if (now - lastAlarmTime >= 1000) {
-      alarmStage = 0;
-      lastAlarmTime = now;
+  if(beepCount <= 3){
+    if (now - lastToggleTime >= TOGGLE_INTERVAL) {
+      outputState = !outputState;
+      digitalWrite(D6, outputState ? HIGH : LOW);
+      lastToggleTime = now;
+  
+      if (!outputState) {
+        beepCount++;
+      }
     }
   }
+    
 }

@@ -20,4 +20,5 @@ extern int servoPin;
 extern int buttonPin;
 extern bool medicineTaken;
 
+
 #endif
