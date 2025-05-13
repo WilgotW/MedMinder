@@ -104,7 +104,6 @@ export const getNextDose = async (req: Request, res: Response) => {
 
       let diff = hourDiff + minuteDiff / 60;
 
-      // ✅ Fix: wrap around midnight if dose is earlier than current time
       if (diff < 0) diff += 24;
 
       if (dose.espDispensed == false && dose.dispensed == true) {
