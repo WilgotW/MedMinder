@@ -43,7 +43,7 @@ export default function HomeScreen() {
     };
     loadUser();
 
-    //refetch medicine every minute
+    //refetch medicine every 2 seconds
     const interval = setInterval(refetchDoses, 2000);
     return () => clearInterval(interval);
   }, []);
@@ -151,7 +151,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.screenContainer}>
       <ParallaxScrollView
-        headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+        headerBackgroundColor={{ light: "#87bfd1", dark: "#1D3D47" }}
         headerImage={<></>}
       >
         <ThemedView style={styles.container}>
